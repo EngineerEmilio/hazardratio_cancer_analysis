@@ -1,0 +1,45 @@
+---
+Protitle: "TimeSeries Hazard Rate"
+author: "Emilio Morales Luna"
+date: "2023-11-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Hazard ratio (HR)
+
+El cociente de riesgo o Hazard ratio, es el riesgo relativo de que ocurra un evento (por ejemplo, progresión de la enfermedad) en un grupo del ensayo en comparación al otro, durante toda la duración del estudio.
+
+Un HR de 1 significa que no hay diferencia entre los grupos, un HR de 2 significa que hay un riesgo doble y un HR de 0,5 indica que hay la mitad de riesgo de que un evento ocurra en un grupo con respecto al otro.
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
