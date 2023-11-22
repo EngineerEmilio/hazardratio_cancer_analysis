@@ -9,17 +9,138 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### Hazard ratio (HR)
+# Introducción:
 
-El cociente de riesgo o Hazard ratio, es el riesgo relativo de que ocurra un evento (por ejemplo, progresión de la enfermedad) en un grupo del ensayo en comparación al otro, durante toda la duración del estudio.
+De acuerdo con la Organización Mundial de la Salud, el cáncer es la segunda causa de muerte a nivel mundial. El cáncer de pulmón es el tipo de cáncer más común en hombres y mujeres. Clasificar muestras de pacientes con cáncer de pulmón utilizando datos de la expresión de los genes puede ayudar a mejorar el proceso de diagnóstico y tratamiento de esta enfermedad. Los 9 genes analizados en este estudio fueron seleccionados en un proyecto previo por su capacidad para diferenciar tipos de cáncer de pulmón en pacientes utilizado algoritmos de Machine Learning. El objetivo del presente estudio es determinar cuáles genes tienen mayor impacto en la mortalidad de los pacientes de este tipo de cáncer mediante un análisis de supervivencia utilizado el modelo estadístico de Kaplan-Meier.
 
-Un HR de 1 significa que no hay diferencia entre los grupos, un HR de 2 significa que hay un riesgo doble y un HR de 0,5 indica que hay la mitad de riesgo de que un evento ocurra en un grupo con respecto al otro.
+### Integrantes:
+
+- Morales Luna Emilio
+
+### Objetivos:
 
 ```{r}
 library('dplyr')
 library(ggplot2)
 library(readxl)
 library(survival)
+library(tidyverse)
+# install.packages("gtsummary")
+library(gtsummary)
+```
+
+##### Especificar la ruta del archivo Excel
+
+Ruta de Emilio:
+
+```{r}
+setwd("C:/Users/1097513297/Documents/BEDU/R_works/Proyecto_Cancer")
+getwd()
+archivo_excel <- "C:/Users/1097513297/Documents/BEDU/R_works/Proyecto_Cancer/Genes para superviencia.xlsx"
+```
+
+Ruta [BLANK]
+
+```{r}
+
+```
+
+### Declaramos la lista de dataframes
+
+```{r}
+lista_dataframes <- lapply(excel_sheets(archivo_excel), function(sheet) {
+  read_excel(archivo_excel, sheet = sheet)
+})
+
+```
+
+### Nombramos cada índice de la lista
+
+```{r}
+lista_genes <- lista_dataframes [[1]]
+CDHR1 <- lista_dataframes [[2]]
+DSC3 <- lista_dataframes [[3]]
+GJB5 <- lista_dataframes [[4]]
+S1PR5 <- lista_dataframes [[5]]
+GPC1 <- lista_dataframes [[6]]
+GJB6 <- lista_dataframes [[7]]
+DSG3 <- lista_dataframes [[8]]
+SLC2A1 <- lista_dataframes [[9]]
+FAT2 <- lista_dataframes [[10]]
+
+```
+
+#### Usamos el paquete de supervivencia
+
+[Introducción a la paqueteria]
+
+## Gen CDHR1
+
+Codifica para la proteína cadherina-1, relacionada con la adhesión celular y la diferenciación tisular.
+
+### Realizamos dos listas filtradas
+```{r}
+#Filtro expresion alta
+exp_alta <- CDHR1[CDHR1$`Expression (1=high)` < 1 , ]
+
+#Filtro expresion baja
+exp_baja <- CDHR1[CDHR1$`Expression (1=high)` > 0 , ]
+```
+
+Creamos los objetos de supervivencia
+```{r}
+datos_supervivencia_alta <- Surv(exp_alta$`Time (months)`, exp_alta$Event)
+datos_supervivencia_baja <- Surv(exp_baja$`Time (months)`, exp_baja$Event)
+
+modelo_km_alta <- survfit(datos_supervivencia_alta ~ 1)
+modelo_km_baja <- survfit(datos_supervivencia_baja ~ 1)
+```
+
+#### Obtenemos gráficas del supervivencia de expresión alta y baja
+
+Hazard ratio (HR): El cociente de riesgo o Hazard ratio, es el riesgo relativo de que ocurra un evento (por ejemplo, progresión de la enfermedad) en un grupo del ensayo en comparación al otro, durante toda la duración del estudio.
+
+Un HR de 1 significa que no hay diferencia entre los grupos, un HR de 2 significa que hay un riesgo doble y un HR de 0,5 indica que hay la mitad de riesgo de que un evento ocurra en un grupo con respecto al otro.
+
+```{r}
+
+plot(modelo_km_alta, main = "Curva de Kaplan-Meier", xlab = "Tiempo (meses)", ylab = "Probabilidad de supervivencia", col = 2, lwd = 2)
+lines(modelo_km_baja,lwd=2,col="blue")
+legend('bottomright',inset=0.05,c("Expresión Alta","Expresión Baja"),lty=1,col=c("red","blue"),title="Gráficas")
+
+coxph( Surv(CDHR1$`Time (months)`, CDHR1$Event) ~ CDHR1$`Expression (1=high)`, data = CDHR1) %>% 
+  tbl_regression(exp = TRUE) 
+```
+
+```{r}
+#Filtrar muertes en el dataset
+dataset_muertes <- CDHR1[CDHR1$Event == 1 , ]
+
+histograma <- hist(dataset_muertes$`Time (months)`, breaks = 60, main = "Histograma de muertes", xlab = "Tiempo (meses)", ylab = "Frecuencia muertes", col = "lightblue", border = "black")
+
+# Acceder a los intervalos y frecuencias del histograma
+tiempo <- histograma$breaks[-1]
+frecuencia <- histograma$counts
+```
+
+### Gráficas
+
+```{r}
+# Mostrar los intervalos y frecuencias
+tabla_frec <- data.frame(tiempo,frecuencia)
+
+# Graficar la serie de tiempo con ggplot2
+ggplot(tabla_frec, aes(x = tiempo, y = frecuencia)) +
+  geom_line() +
+  labs(title = "Serie de Tiempo de Muertes", x = "Tiempo (meses)", y = "Número de muertes")
+
+```
+
+## Gen DSC3
+
+```{r}
+
+
 ```
 
 ```{r}
@@ -27,25 +148,26 @@ library(survival)
 ```
 
 
-```{r}
-
-```
-
 
 ```{r}
 
 ```
 
+```{r}
+
+```
 
 ```{r}
 
 ```
 
-
 ```{r}
 
 ```
 
+```{r}
+
+```
 
 ```{r}
 
