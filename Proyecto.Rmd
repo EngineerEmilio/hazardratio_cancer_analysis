@@ -16,14 +16,14 @@ El cociente de riesgo o Hazard ratio, es el riesgo relativo de que ocurra un eve
 Un HR de 1 significa que no hay diferencia entre los grupos, un HR de 2 significa que hay un riesgo doble y un HR de 0,5 indica que hay la mitad de riesgo de que un evento ocurra en un grupo con respecto al otro.
 
 ```{r}
-#install.packages("readxl")
-#install.packages("writexl")
-library(readxl)
 library('dplyr')
-#install.packages('xts')          
-library('xts')
-#install.packages("zoo")
-library(zoo)
+library(ggplot2)
+library(readxl)
+library(survival)
+```
+
+```{r}
+
 ```
 
 
