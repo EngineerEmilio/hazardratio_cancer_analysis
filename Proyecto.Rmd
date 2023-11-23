@@ -34,14 +34,17 @@ library(gtsummary)
 Ruta de Emilio:
 
 ```{r}
-setwd("C:/Users/1097513297/Documents/BEDU/R_works/Proyecto_Cancer")
-getwd()
-archivo_excel <- "C:/Users/1097513297/Documents/BEDU/R_works/Proyecto_Cancer/Genes para superviencia.xlsx"
+#setwd("C:/Users/1097513297/Documents/BEDU/R_works/Proyecto_Cancer")
+#getwd()
+#archivo_excel <- "C:/Users/1097513297/Documents/BEDU/R_works/Proyecto_Cancer/Genes para superviencia.xlsx"
 ```
 
-Ruta [BLANK]
+Ruta Misael:
 
 ```{r}
+#setwd("/Users/misaeljara/Downloads/Genes para superviencia.xlsx")
+#getwd()
+archivo_excel <- "/Users/misaeljara/Downloads/Genes para superviencia.xlsx"
 
 ```
 
@@ -112,6 +115,9 @@ coxph( Surv(CDHR1$`Time (months)`, CDHR1$Event) ~ CDHR1$`Expression (1=high)`, d
   tbl_regression(exp = TRUE) 
 ```
 
+De acuerdo a la grafica de Kaplan-Meier del gen CDHR1, se observa la probabilidad de supervivencia es menor  cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.33, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 33% mayor que cuando esta en el nivel alto. 
+
+
 ```{r}
 #Filtrar muertes en el dataset
 dataset_muertes <- CDHR1[CDHR1$Event == 1 , ]
@@ -136,39 +142,256 @@ ggplot(tabla_frec, aes(x = tiempo, y = frecuencia)) +
 
 ```
 
+
+
+
 ## Gen DSC3
 
+### Realizamos listas filtradas para el siguiente gen DSC3
 ```{r}
+#Filtro expresion alta
+exp_alta_dsc3<- DSC3[DSC3$`Expression (1=high)` < 1 , ]
+
+#Filtro expresion baja
+exp_baja_dsc3 <- DSC3[DSC3$`Expression (1=high)` > 0 , ]
+```
+
+## Objetos de Supervivencia para nuestro gen DSC3    
+```{r}
+
+datos_supervivencia_alta_dsc3 <- Surv(exp_alta_dsc3$`Time (months)`, exp_alta_dsc3$Event)
+datos_supervivencia_baja_dsc3 <- Surv(exp_baja_dsc3$`Time (months)`, exp_baja_dsc3$Event)
+
+modelo_km_alta_dsc3 <- survfit(datos_supervivencia_alta_dsc3 ~ 1)
+modelo_km_baja_dsc3 <- survfit(datos_supervivencia_baja_dsc3 ~ 1)
+
+```
+
+
+#### Obtenemos gráficas del supervivencia de expresión alta y baja en Gen DSC3
+```{r}
+plot(modelo_km_alta_dsc3, main = "Curva de Kaplan-Meier DSC3", xlab = "Tiempo (meses)", ylab = "Probabilidad de supervivencia", col = 2, lwd = 2)
+lines(modelo_km_baja_dsc3,lwd=2,col="blue")
+legend('bottomright',inset=0.05,c("Expresión Alta","Expresión Baja"),lty=1,col=c("red","blue"),title="Gráficas")
+
+coxph( Surv(DSC3$`Time (months)`, DSC3$Event) ~ DSC3$`Expression (1=high)`, data = DSC3) %>% 
+  tbl_regression(exp = TRUE) 
 
 
 ```
 
+
+#### Filtrando muertes para el gen DSC3
 ```{r}
+#Filtrar muertes en el dataset
+dataset_muertes_dsc3 <- DSC3[DSC3$Event == 1 , ]
 
-```
+histograma_dsc3  <- hist(dataset_muertes_dsc3$`Time (months)`, breaks = 60, main = "Histograma de muertes DSC3", xlab = "Tiempo (meses)", ylab = "Frecuencia muertes", col = "yellow", border = "black")
 
-
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
+# Acceder a los intervalos y frecuencias del histograma
+tiempo_dsc3 <- histograma_dsc3 $breaks[-1]
+frecuencia_dsc3 <- histograma_dsc3 $counts
 
 ```
 
 ```{r}
+# Mostrar los intervalos y frecuencias
+tabla_frec_dsc3  <- data.frame(tiempo_dsc3 ,frecuencia_dsc3 )
+
+# Graficar la serie de tiempo con ggplot2
+ggplot(tabla_frec_dsc3 , aes(x = tiempo_dsc3 , y = frecuencia_dsc3 )) +
+  geom_line() +
+  labs(title = "Serie de Tiempo de Muertes", x = "Tiempo (meses)", y = "Número de muertes")
+
+```
+#### En el siguiente Gen que trabajaremos es el GJB5 
+
+#### Filtracion para GJB5
+```{r}
+#Filtro expresion alta
+exp_alta_gjb5 <- GJB5[GJB5$`Expression (1=high)` < 1 , ]
+
+#Filtro expresion baja
+exp_baja_gjb5 <- GJB5[GJB5$`Expression (1=high)` > 0 , ]
+```
+#### Creacion de supervivencia GBJ5
+```{r}
+datos_supervivencia_alta_gjb5 <- Surv(exp_alta_gjb5$`Time (months)`, exp_alta_gjb5$Event)
+datos_supervivencia_baja_gjb5 <- Surv(exp_baja_gjb5$`Time (months)`, exp_baja_gjb5$Event)
+
+modelo_km_alta_gjb5 <- survfit(datos_supervivencia_alta_gjb5 ~ 1)
+modelo_km_baja_gjb5 <- survfit(datos_supervivencia_baja_gjb5 ~ 1)
+```
+#### Graficas de supervivencia 
+```{r}
+plot(modelo_km_alta_gjb5, main = "Curva de Kaplan-Meier GJB5", xlab = "Tiempo (meses)", ylab = "Probabilidad de supervivencia", col = 2, lwd = 2)
+lines(modelo_km_baja_gjb5,lwd=2,col="blue")
+legend('bottomright',inset=0.05,c("Expresión Alta","Expresión Baja"),lty=1,col=c("red","blue"),title="Gráficas GJB5")
+
+coxph( Surv(GJB5$`Time (months)`, GJB5$Event) ~ GJB5$`Expression (1=high)`, data = GJB5) %>% 
+  tbl_regression(exp = TRUE) 
+
+```
+
+
+```{r}
+#Filtrar muertes en el dataset
+dataset_muertes_gjb5 <- GJB5[GJB5$Event == 1 , ]
+
+histograma_gjb5  <- hist(dataset_muertes_gjb5 $`Time (months)`, breaks = 60, main = "Histograma de muertes GJB5", xlab = "Tiempo (meses)", ylab = "Frecuencia muertes", col = "lightblue", border = "black")
+
+# Acceder a los intervalos y frecuencias del histograma
+tiempo_gjb5  <- histograma_gjb5 $breaks[-1]
+frecuencia_gjb5  <- histograma_gjb5 $counts
+
+```
+
+
+```{r}
+# Mostrar los intervalos y frecuencias
+tabla_frec_gjb5 <- data.frame(tiempo_gjb5,frecuencia_gjb5)
+
+# Graficar la serie de tiempo con ggplot2
+ggplot(tabla_frec_gjb5, aes(x = tiempo_gjb5, y = frecuencia_gjb5)) +
+  geom_line() +
+  labs(title = "Serie de Tiempo de Muertes", x = "Tiempo (meses)", y = "Número de muertes")
+
+```
+
+
+#### Ahora empezaremos con el gen S1PR5
+Filtro para sacar expresiones S1PR5
+
+```{r}
+#Filtro expresion alta
+exp_alta_s1pr5 <- S1PR5[S1PR5$`Expression (1=high)` < 1 , ]
+
+#Filtro expresion baja
+exp_baja_s1pr5  <- S1PR5[S1PR5$`Expression (1=high)` > 0 , ]
+
+```
+## objetos de supervivencia 
+```{r}
+datos_supervivencia_alta_s1pr5 <- Surv(exp_alta_s1pr5$`Time (months)`, exp_alta_s1pr5$Event)
+datos_supervivencia_baja_s1pr5 <- Surv(exp_baja_s1pr5$`Time (months)`, exp_baja_s1pr5$Event)
+
+modelo_km_alta_s1pr5 <- survfit(datos_supervivencia_alta_s1pr5 ~ 1)
+modelo_km_baja_s1pr5 <- survfit(datos_supervivencia_baja_s1pr5 ~ 1)
+
+```
+## Modelado para sacar Hazard Ratio S1PR5
+```{r}
+plot(modelo_km_alta_s1pr5, main = "Curva de Kaplan-Meier S1PR5", xlab = "Tiempo (meses)", ylab = "Probabilidad de supervivencia", col = 2, lwd = 2)
+lines(modelo_km_baja_s1pr5,lwd=2,col="blue")
+legend('bottomright',inset=0.05,c("Expresión Alta","Expresión Baja"),lty=1,col=c("red","blue"),title="Gráficas")
+
+coxph( Surv(S1PR5$`Time (months)`, S1PR5$Event) ~ S1PR5$`Expression (1=high)`, data = S1PR5) %>% 
+  tbl_regression(exp = TRUE)
 
 ```
 
 ```{r}
+#Filtrar muertes en el dataset
+dataset_muertes_s1pr5 <- S1PR5[S1PR5$Event == 1 , ]
 
+histograma_s1pr5 <- hist(dataset_muertes_s1pr5$`Time (months)`, breaks = 60, main = "Histograma de muertes S1PR5", xlab = "Tiempo (meses)", ylab = "Frecuencia muertes", col = "lightblue", border = "black")
+
+# Acceder a los intervalos y frecuencias del histograma
+tiempo_s1pr5 <- histograma_s1pr5$breaks[-1]
+frecuencia_s1pr5 <- histograma_s1pr5$counts
+```
+
+
+```{r}
+# Mostrar los intervalos y frecuencias
+tabla_frec_s1pr5 <- data.frame(tiempo_s1pr5,frecuencia_s1pr5)
+
+# Graficar la serie de tiempo con ggplot2
+ggplot(tabla_frec_s1pr5, aes(x = tiempo_s1pr5, y = frecuencia_s1pr5)) +
+  geom_line() +
+  labs(title = "Serie de Tiempo de Muertes", x = "Tiempo (meses)", y = "Número de muertes")
+
+```
+
+
+Ultimo GPC1
+Filtros de Expresiones GPC1
+```{r}
+#Filtro expresion alta
+exp_alta_gpc1 <- GPC1[GPC1$`Expression (1=high)` < 1 , ]
+
+#Filtro expresion baja
+exp_baja_gpc1 <- GPC1[GPC1$`Expression (1=high)` > 0 , ]
+
+```
+Objetos de Supervivencia GPC1
+```{r}
+datos_supervivencia_alta_gpc1 <- Surv(exp_alta_gpc1$`Time (months)`, exp_alta_gpc1$Event)
+datos_supervivencia_baja_gpc1 <- Surv(exp_baja_gpc1$`Time (months)`, exp_baja_gpc1$Event)
+
+modelo_km_alta_gpc1 <- survfit(datos_supervivencia_alta_gpc1 ~ 1)
+modelo_km_baja_gpc1 <- survfit(datos_supervivencia_baja_gpc1 ~ 1)
+```
+Graficas de supervivencia GPC1
+```{r}
+plot(modelo_km_alta_gpc1, main = "Curva de Kaplan-Meier GPC1", xlab = "Tiempo (meses)", ylab = "Probabilidad de supervivencia", col = 2, lwd = 2)
+lines(modelo_km_baja_gpc1,lwd=2,col="blue")
+legend('bottomright',inset=0.05,c("Expresión Alta","Expresión Baja"),lty=1,col=c("red","blue"),title="Gráficas")
+
+coxph( Surv(GPC1$`Time (months)`, GPC1$Event) ~ GPC1$`Expression (1=high)`, data = GPC1) %>% 
+  tbl_regression(exp = TRUE)
+```
+#### Filtracion de Muertes GPC1
+```{r}
+#Filtrar muertes en el dataset
+dataset_muertes_gpc1 <- GPC1[GPC1$Event == 1 , ]
+
+histograma_gpc1 <- hist(dataset_muertes_gpc1$`Time (months)`, breaks = 60, main = "Histograma de muertes", xlab = "Tiempo (meses)", ylab = "Frecuencia muertes", col = "lightblue", border = "black")
+
+# Acceder a los intervalos y frecuencias del histograma
+tiempo_gpc1 <- histograma_gpc1$breaks[-1]
+frecuencia_gpc1 <- histograma_gpc1$counts
+```
+
+#### Intervalos y Frequencias
+```{r}
+tabla_frec_gpc1 <- data.frame(tiempo_gpc1,frecuencia_gpc1)
+
+# Graficar la serie de tiempo con ggplot2
+ggplot(tabla_frec_gpc1, aes(x = tiempo_gpc1, y = frecuencia_gpc1)) +
+  geom_line() +
+  labs(title = "Serie de Tiempo de Muertes", x = "Tiempo (meses)", y = "Número de muertes")
 ```
 
 ```{r}
-
 ```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
