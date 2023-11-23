@@ -13,12 +13,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 De acuerdo con la Organización Mundial de la Salud, el cáncer es la segunda causa de muerte a nivel mundial. El cáncer de pulmón es el tipo de cáncer más común en hombres y mujeres. Clasificar muestras de pacientes con cáncer de pulmón utilizando datos de la expresión de los genes puede ayudar a mejorar el proceso de diagnóstico y tratamiento de esta enfermedad. Los 9 genes analizados en este estudio fueron seleccionados en un proyecto previo por su capacidad para diferenciar tipos de cáncer de pulmón en pacientes utilizado algoritmos de Machine Learning. El objetivo del presente estudio es determinar cuáles genes tienen mayor impacto en la mortalidad de los pacientes de este tipo de cáncer mediante un análisis de supervivencia utilizado el modelo estadístico de Kaplan-Meier.
 
-### Integrantes:
+#### Integrantes:
 
-- Morales Luna Emilio
+-   Morales Luna Emilio
 
-### Objetivos:
+# Objetivos:
 
+Hazard ratio (HR): El cociente de riesgo o Hazard ratio, es el riesgo relativo de que ocurra un evento (por ejemplo, progresión de la enfermedad) en un grupo del ensayo en comparación al otro, durante toda la duración del estudio.
+
+Un HR de 1 significa que no hay diferencia entre los grupos, un HR de 2 significa que hay un riesgo doble y un HR de 0,5 indica que hay la mitad de riesgo de que un evento ocurra en un grupo con respecto al otro.
+
+
+#Paqueteria
 ```{r}
 library('dplyr')
 library(ggplot2)
@@ -28,6 +34,9 @@ library(tidyverse)
 # install.packages("gtsummary")
 library(gtsummary)
 ```
+
+
+### Declaramos el Dataset a usar
 
 ##### Especificar la ruta del archivo Excel
 
@@ -48,7 +57,6 @@ archivo_excel <- "/Users/misaeljara/Downloads/Genes para superviencia.xlsx"
 
 ```
 
-### Declaramos la lista de dataframes
 
 ```{r}
 lista_dataframes <- lapply(excel_sheets(archivo_excel), function(sheet) {
@@ -57,7 +65,7 @@ lista_dataframes <- lapply(excel_sheets(archivo_excel), function(sheet) {
 
 ```
 
-### Nombramos cada índice de la lista
+Se nombra cada índice de la lista con el gen correspondiente
 
 ```{r}
 lista_genes <- lista_dataframes [[1]]
@@ -73,15 +81,18 @@ FAT2 <- lista_dataframes [[10]]
 
 ```
 
-#### Usamos el paquete de supervivencia
+#### Paquete supervivencia
 
 [Introducción a la paqueteria]
+
+#Desarrollo
 
 ## Gen CDHR1
 
 Codifica para la proteína cadherina-1, relacionada con la adhesión celular y la diferenciación tisular.
 
-### Realizamos dos listas filtradas
+#### Se crean objetos de supervivencia con datos filtrados y se entrenan los datos
+
 ```{r}
 #Filtro expresion alta
 exp_alta <- CDHR1[CDHR1$`Expression (1=high)` < 1 , ]
@@ -90,20 +101,19 @@ exp_alta <- CDHR1[CDHR1$`Expression (1=high)` < 1 , ]
 exp_baja <- CDHR1[CDHR1$`Expression (1=high)` > 0 , ]
 ```
 
-Creamos los objetos de supervivencia
 ```{r}
+#Objetos supervivencia
 datos_supervivencia_alta <- Surv(exp_alta$`Time (months)`, exp_alta$Event)
 datos_supervivencia_baja <- Surv(exp_baja$`Time (months)`, exp_baja$Event)
+
 
 modelo_km_alta <- survfit(datos_supervivencia_alta ~ 1)
 modelo_km_baja <- survfit(datos_supervivencia_baja ~ 1)
 ```
 
-#### Obtenemos gráficas del supervivencia de expresión alta y baja
+### Análisis
 
-Hazard ratio (HR): El cociente de riesgo o Hazard ratio, es el riesgo relativo de que ocurra un evento (por ejemplo, progresión de la enfermedad) en un grupo del ensayo en comparación al otro, durante toda la duración del estudio.
-
-Un HR de 1 significa que no hay diferencia entre los grupos, un HR de 2 significa que hay un riesgo doble y un HR de 0,5 indica que hay la mitad de riesgo de que un evento ocurra en un grupo con respecto al otro.
+#### Graficas de supervivencia de expresión alta y baja
 
 ```{r}
 
@@ -115,9 +125,9 @@ coxph( Surv(CDHR1$`Time (months)`, CDHR1$Event) ~ CDHR1$`Expression (1=high)`, d
   tbl_regression(exp = TRUE) 
 ```
 
-De acuerdo a la grafica de Kaplan-Meier del gen CDHR1, se observa la probabilidad de supervivencia es menor  cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.33, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 33% mayor que cuando esta en el nivel alto. 
+De acuerdo a la grafica de Kaplan-Meier del gen CDHR1, se observa la probabilidad de supervivencia es menor cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.33, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 33% mayor que cuando esta en el nivel alto.
 
-
+#### Histograma
 ```{r}
 #Filtrar muertes en el dataset
 dataset_muertes <- CDHR1[CDHR1$Event == 1 , ]
@@ -129,7 +139,7 @@ tiempo <- histograma$breaks[-1]
 frecuencia <- histograma$counts
 ```
 
-### Gráficas
+#### Gráfica de intervalos y frequencias
 
 ```{r}
 # Mostrar los intervalos y frecuencias
@@ -142,12 +152,11 @@ ggplot(tabla_frec, aes(x = tiempo, y = frecuencia)) +
 
 ```
 
-
-
-
 ## Gen DSC3
+Codifica para la desmocolina-3, una proteína de unión celular involucrada en la cohesión y mantenimiento de la integridad de la epidermis.
 
-### Realizamos listas filtradas para el siguiente gen DSC3
+#### Se crean objetos de supervivencia con datos filtrados y se entrenan los datos
+
 ```{r}
 #Filtro expresion alta
 exp_alta_dsc3<- DSC3[DSC3$`Expression (1=high)` < 1 , ]
@@ -156,7 +165,7 @@ exp_alta_dsc3<- DSC3[DSC3$`Expression (1=high)` < 1 , ]
 exp_baja_dsc3 <- DSC3[DSC3$`Expression (1=high)` > 0 , ]
 ```
 
-## Objetos de Supervivencia para nuestro gen DSC3    
+
 ```{r}
 
 datos_supervivencia_alta_dsc3 <- Surv(exp_alta_dsc3$`Time (months)`, exp_alta_dsc3$Event)
@@ -167,8 +176,10 @@ modelo_km_baja_dsc3 <- survfit(datos_supervivencia_baja_dsc3 ~ 1)
 
 ```
 
+### Análisis 
 
-#### Obtenemos gráficas del supervivencia de expresión alta y baja en Gen DSC3
+#### Gráficas de supervivencia de expresión alta y baja
+
 ```{r}
 plot(modelo_km_alta_dsc3, main = "Curva de Kaplan-Meier DSC3", xlab = "Tiempo (meses)", ylab = "Probabilidad de supervivencia", col = 2, lwd = 2)
 lines(modelo_km_baja_dsc3,lwd=2,col="blue")
@@ -180,8 +191,8 @@ coxph( Surv(DSC3$`Time (months)`, DSC3$Event) ~ DSC3$`Expression (1=high)`, data
 
 ```
 
+#### Histograma
 
-#### Filtrando muertes para el gen DSC3
 ```{r}
 #Filtrar muertes en el dataset
 dataset_muertes_dsc3 <- DSC3[DSC3$Event == 1 , ]
@@ -194,6 +205,8 @@ frecuencia_dsc3 <- histograma_dsc3 $counts
 
 ```
 
+#### Gráfica de intervalos y frequencias
+
 ```{r}
 # Mostrar los intervalos y frecuencias
 tabla_frec_dsc3  <- data.frame(tiempo_dsc3 ,frecuencia_dsc3 )
@@ -204,9 +217,13 @@ ggplot(tabla_frec_dsc3 , aes(x = tiempo_dsc3 , y = frecuencia_dsc3 )) +
   labs(title = "Serie de Tiempo de Muertes", x = "Tiempo (meses)", y = "Número de muertes")
 
 ```
-#### En el siguiente Gen que trabajaremos es el GJB5 
 
-#### Filtracion para GJB5
+## Gen GJB5
+
+Codifica para la proteína conexina 31, que forma parte de las uniones comunicantes y está involucrada en la comunicación intercelular.
+
+#### Se crean los objetos de supervivencia con datos filtrados y se entrenan
+
 ```{r}
 #Filtro expresion alta
 exp_alta_gjb5 <- GJB5[GJB5$`Expression (1=high)` < 1 , ]
@@ -214,7 +231,8 @@ exp_alta_gjb5 <- GJB5[GJB5$`Expression (1=high)` < 1 , ]
 #Filtro expresion baja
 exp_baja_gjb5 <- GJB5[GJB5$`Expression (1=high)` > 0 , ]
 ```
-#### Creacion de supervivencia GBJ5
+
+
 ```{r}
 datos_supervivencia_alta_gjb5 <- Surv(exp_alta_gjb5$`Time (months)`, exp_alta_gjb5$Event)
 datos_supervivencia_baja_gjb5 <- Surv(exp_baja_gjb5$`Time (months)`, exp_baja_gjb5$Event)
@@ -222,7 +240,10 @@ datos_supervivencia_baja_gjb5 <- Surv(exp_baja_gjb5$`Time (months)`, exp_baja_gj
 modelo_km_alta_gjb5 <- survfit(datos_supervivencia_alta_gjb5 ~ 1)
 modelo_km_baja_gjb5 <- survfit(datos_supervivencia_baja_gjb5 ~ 1)
 ```
-#### Graficas de supervivencia 
+
+### Análisis
+#### Graficas de supervivencia
+
 ```{r}
 plot(modelo_km_alta_gjb5, main = "Curva de Kaplan-Meier GJB5", xlab = "Tiempo (meses)", ylab = "Probabilidad de supervivencia", col = 2, lwd = 2)
 lines(modelo_km_baja_gjb5,lwd=2,col="blue")
@@ -233,6 +254,7 @@ coxph( Surv(GJB5$`Time (months)`, GJB5$Event) ~ GJB5$`Expression (1=high)`, data
 
 ```
 
+#### Histograma
 
 ```{r}
 #Filtrar muertes en el dataset
@@ -247,6 +269,8 @@ frecuencia_gjb5  <- histograma_gjb5 $counts
 ```
 
 
+#### Gráfica de intervalos y frequencias
+
 ```{r}
 # Mostrar los intervalos y frecuencias
 tabla_frec_gjb5 <- data.frame(tiempo_gjb5,frecuencia_gjb5)
@@ -258,9 +282,11 @@ ggplot(tabla_frec_gjb5, aes(x = tiempo_gjb5, y = frecuencia_gjb5)) +
 
 ```
 
+## Gen S1PR5
 
-#### Ahora empezaremos con el gen S1PR5
-Filtro para sacar expresiones S1PR5
+Codifica para el receptor 5 de esfingosina-1-fosfato, que participa en la regulación de procesos celulares como la migración y la supervivencia.
+
+#### Se crean objetos de supervivencia con datos filtrados
 
 ```{r}
 #Filtro expresion alta
@@ -270,7 +296,8 @@ exp_alta_s1pr5 <- S1PR5[S1PR5$`Expression (1=high)` < 1 , ]
 exp_baja_s1pr5  <- S1PR5[S1PR5$`Expression (1=high)` > 0 , ]
 
 ```
-## objetos de supervivencia 
+
+
 ```{r}
 datos_supervivencia_alta_s1pr5 <- Surv(exp_alta_s1pr5$`Time (months)`, exp_alta_s1pr5$Event)
 datos_supervivencia_baja_s1pr5 <- Surv(exp_baja_s1pr5$`Time (months)`, exp_baja_s1pr5$Event)
@@ -279,7 +306,11 @@ modelo_km_alta_s1pr5 <- survfit(datos_supervivencia_alta_s1pr5 ~ 1)
 modelo_km_baja_s1pr5 <- survfit(datos_supervivencia_baja_s1pr5 ~ 1)
 
 ```
-## Modelado para sacar Hazard Ratio S1PR5
+
+### Análisis
+
+#### Gráfica de supervivencia
+
 ```{r}
 plot(modelo_km_alta_s1pr5, main = "Curva de Kaplan-Meier S1PR5", xlab = "Tiempo (meses)", ylab = "Probabilidad de supervivencia", col = 2, lwd = 2)
 lines(modelo_km_baja_s1pr5,lwd=2,col="blue")
@@ -289,6 +320,8 @@ coxph( Surv(S1PR5$`Time (months)`, S1PR5$Event) ~ S1PR5$`Expression (1=high)`, d
   tbl_regression(exp = TRUE)
 
 ```
+
+#### Histograma
 
 ```{r}
 #Filtrar muertes en el dataset
@@ -301,6 +334,7 @@ tiempo_s1pr5 <- histograma_s1pr5$breaks[-1]
 frecuencia_s1pr5 <- histograma_s1pr5$counts
 ```
 
+#### Gráfica
 
 ```{r}
 # Mostrar los intervalos y frecuencias
@@ -313,9 +347,11 @@ ggplot(tabla_frec_s1pr5, aes(x = tiempo_s1pr5, y = frecuencia_s1pr5)) +
 
 ```
 
+## Gen GPC1 
 
-Ultimo GPC1
-Filtros de Expresiones GPC1
+Codifica para la glicoproteína de células germinales 1, que se ha asociado con la progresión del cáncer y la angiogénesis.
+#### Objetos de supervivencia con datos filtrados
+
 ```{r}
 #Filtro expresion alta
 exp_alta_gpc1 <- GPC1[GPC1$`Expression (1=high)` < 1 , ]
@@ -324,7 +360,8 @@ exp_alta_gpc1 <- GPC1[GPC1$`Expression (1=high)` < 1 , ]
 exp_baja_gpc1 <- GPC1[GPC1$`Expression (1=high)` > 0 , ]
 
 ```
-Objetos de Supervivencia GPC1
+
+
 ```{r}
 datos_supervivencia_alta_gpc1 <- Surv(exp_alta_gpc1$`Time (months)`, exp_alta_gpc1$Event)
 datos_supervivencia_baja_gpc1 <- Surv(exp_baja_gpc1$`Time (months)`, exp_baja_gpc1$Event)
@@ -332,7 +369,11 @@ datos_supervivencia_baja_gpc1 <- Surv(exp_baja_gpc1$`Time (months)`, exp_baja_gp
 modelo_km_alta_gpc1 <- survfit(datos_supervivencia_alta_gpc1 ~ 1)
 modelo_km_baja_gpc1 <- survfit(datos_supervivencia_baja_gpc1 ~ 1)
 ```
-Graficas de supervivencia GPC1
+
+### Análisis
+
+#### Gráfica de supervivencia
+
 ```{r}
 plot(modelo_km_alta_gpc1, main = "Curva de Kaplan-Meier GPC1", xlab = "Tiempo (meses)", ylab = "Probabilidad de supervivencia", col = 2, lwd = 2)
 lines(modelo_km_baja_gpc1,lwd=2,col="blue")
@@ -341,7 +382,9 @@ legend('bottomright',inset=0.05,c("Expresión Alta","Expresión Baja"),lty=1,col
 coxph( Surv(GPC1$`Time (months)`, GPC1$Event) ~ GPC1$`Expression (1=high)`, data = GPC1) %>% 
   tbl_regression(exp = TRUE)
 ```
-#### Filtracion de Muertes GPC1
+
+#### Histograma
+
 ```{r}
 #Filtrar muertes en el dataset
 dataset_muertes_gpc1 <- GPC1[GPC1$Event == 1 , ]
@@ -353,7 +396,8 @@ tiempo_gpc1 <- histograma_gpc1$breaks[-1]
 frecuencia_gpc1 <- histograma_gpc1$counts
 ```
 
-#### Intervalos y Frequencias
+#### Gráfica de intervalos y frequencias
+
 ```{r}
 tabla_frec_gpc1 <- data.frame(tiempo_gpc1,frecuencia_gpc1)
 
@@ -374,24 +418,3 @@ ggplot(tabla_frec_gpc1, aes(x = tiempo_gpc1, y = frecuencia_gpc1)) +
 
 ```{r}
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
