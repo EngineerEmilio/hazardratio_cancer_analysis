@@ -389,7 +389,7 @@ coxph( Surv(GPC1$`Time (months)`, GPC1$Event) ~ GPC1$`Expression (1=high)`, data
 ```
 De acuerdo a la grafica de Kaplan-Meier del gen GPC1, se observa la probabilidad de supervivencia es menor  cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (<0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.46, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 46% mayor que cuando esta en el nivel alto.
 
-#### Histograma
+#### Histogramaa
 
 ```{r}
 #Filtrar muertes en el dataset
