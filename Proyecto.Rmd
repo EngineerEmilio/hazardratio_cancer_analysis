@@ -190,6 +190,7 @@ coxph( Surv(DSC3$`Time (months)`, DSC3$Event) ~ DSC3$`Expression (1=high)`, data
 
 
 ```
+#### De acuerdo a la grafica de Kaplan-Meier del gen DSC3, se observa la probabilidad de supervivencia es menor  cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (<0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.43, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 43% mayor que cuando esta en el nivel alto.
 
 #### Histograma
 
@@ -253,6 +254,9 @@ coxph( Surv(GJB5$`Time (months)`, GJB5$Event) ~ GJB5$`Expression (1=high)`, data
   tbl_regression(exp = TRUE) 
 
 ```
+De acuerdo a la grafica de Kaplan-Meier del gen GJB5, se observa la probabilidad de supervivencia es menor  cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (<0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.37, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 37% mayor que cuando esta en el nivel alto.
+
+
 
 #### Histograma
 
@@ -320,6 +324,7 @@ coxph( Surv(S1PR5$`Time (months)`, S1PR5$Event) ~ S1PR5$`Expression (1=high)`, d
   tbl_regression(exp = TRUE)
 
 ```
+De acuerdo a la grafica de Kaplan-Meier del gen S1PR5, se observa la probabilidad de supervivencia es menor  cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.31, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 31% mayor que cuando esta en el nivel alto.
 
 #### Histograma
 
@@ -382,6 +387,7 @@ legend('bottomright',inset=0.05,c("Expresión Alta","Expresión Baja"),lty=1,col
 coxph( Surv(GPC1$`Time (months)`, GPC1$Event) ~ GPC1$`Expression (1=high)`, data = GPC1) %>% 
   tbl_regression(exp = TRUE)
 ```
+De acuerdo a la grafica de Kaplan-Meier del gen GPC1, se observa la probabilidad de supervivencia es menor  cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (<0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.46, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 46% mayor que cuando esta en el nivel alto.
 
 #### Histograma
 
