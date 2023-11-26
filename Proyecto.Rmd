@@ -15,9 +15,9 @@ De acuerdo con la Organización Mundial de la Salud, el cáncer es la segunda ca
 
 #### Integrantes:
 
--   Morales Luna Emilio emiliomoralesluna@comunidad.unam.mx
--   Misael Jara misael_anton@berkeley.edu
--   Kalaumari Mayoral Peña kmayoralp@gmail.com
+-   Morales Luna Emilio [emiliomoralesluna\@comunidad.unam.mx](mailto:emiliomoralesluna@comunidad.unam.mx){.email}
+-   Misael Jara [misael_anton\@berkeley.edu](mailto:misael_anton@berkeley.edu){.email}
+-   Kalaumari Mayoral Peña [kmayoralp\@gmail.com](mailto:kmayoralp@gmail.com){.email}
 
 # Objetivos:
 
@@ -54,7 +54,7 @@ Ruta Misael:
 ```{r}
 #setwd("/Users/misaeljara/Downloads/Genes para superviencia.xlsx")
 #getwd()
-archivo_excel <- "/Users/misaeljara/Downloads/Genes para superviencia.xlsx"
+#archivo_excel <- "/Users/misaeljara/Downloads/Genes para superviencia.xlsx"
 
 ```
 
@@ -83,7 +83,7 @@ FAT2 <- lista_dataframes [[10]]
 
 #### Paquete supervivencia
 
-[Introducción a la paqueteria]
+Los datos de supervivencia son datos de tiempo a evento que consisten en un comienzo distinto tiempo y tiempo final
 
 #Desarrollo
 
