@@ -15,7 +15,9 @@ De acuerdo con la Organización Mundial de la Salud, el cáncer es la segunda ca
 
 #### Integrantes:
 
--   Morales Luna Emilio
+-   Morales Luna Emilio emiliomoralesluna@comunidad.unam.mx
+-   Misael Jara misael_anton@berkeley.edu
+-   Kalaumari Mayoral Peña kmayoralp@gmail.com
 
 # Objetivos:
 
@@ -23,8 +25,8 @@ Hazard ratio (HR): El cociente de riesgo o Hazard ratio, es el riesgo relativo d
 
 Un HR de 1 significa que no hay diferencia entre los grupos, un HR de 2 significa que hay un riesgo doble y un HR de 0,5 indica que hay la mitad de riesgo de que un evento ocurra en un grupo con respecto al otro.
 
-
 #Paqueteria
+
 ```{r}
 library('dplyr')
 library(ggplot2)
@@ -35,7 +37,6 @@ library(tidyverse)
 library(gtsummary)
 ```
 
-
 ### Declaramos el Dataset a usar
 
 ##### Especificar la ruta del archivo Excel
@@ -43,9 +44,9 @@ library(gtsummary)
 Ruta de Emilio:
 
 ```{r}
-#setwd("C:/Users/1097513297/Documents/BEDU/R_works/Proyecto_Cancer")
-#getwd()
-#archivo_excel <- "C:/Users/1097513297/Documents/BEDU/R_works/Proyecto_Cancer/Genes para superviencia.xlsx"
+setwd("C:/Users/1097513297/Documents/BEDU/R_works/Proyecto_Cancer")
+getwd()
+archivo_excel <- "C:/Users/1097513297/Documents/BEDU/R_works/Proyecto_Cancer/Genes para superviencia.xlsx"
 ```
 
 Ruta Misael:
@@ -56,7 +57,6 @@ Ruta Misael:
 archivo_excel <- "/Users/misaeljara/Downloads/Genes para superviencia.xlsx"
 
 ```
-
 
 ```{r}
 lista_dataframes <- lapply(excel_sheets(archivo_excel), function(sheet) {
@@ -121,13 +121,13 @@ plot(modelo_km_alta, main = "Curva de Kaplan-Meier", xlab = "Tiempo (meses)", yl
 lines(modelo_km_baja,lwd=2,col="blue")
 legend('bottomright',inset=0.05,c("Expresión Alta","Expresión Baja"),lty=1,col=c("red","blue"),title="Gráficas")
 
-coxph( Surv(CDHR1$`Time (months)`, CDHR1$Event) ~ CDHR1$`Expression (1=high)`, data = CDHR1) %>% 
-  tbl_regression(exp = TRUE) 
+coxph( Surv(CDHR1$`Time (months)`, CDHR1$Event) ~ CDHR1$`Expression (1=high)`, data = CDHR1) %>%   tbl_regression(exp = TRUE) 
 ```
 
 De acuerdo a la grafica de Kaplan-Meier del gen CDHR1, se observa la probabilidad de supervivencia es menor cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.33, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 33% mayor que cuando esta en el nivel alto.
 
 #### Histograma
+
 ```{r}
 #Filtrar muertes en el dataset
 dataset_muertes <- CDHR1[CDHR1$Event == 1 , ]
@@ -153,6 +153,7 @@ ggplot(tabla_frec, aes(x = tiempo, y = frecuencia)) +
 ```
 
 ## Gen DSC3
+
 Codifica para la desmocolina-3, una proteína de unión celular involucrada en la cohesión y mantenimiento de la integridad de la epidermis.
 
 #### Se crean objetos de supervivencia con datos filtrados y se entrenan los datos
@@ -165,7 +166,6 @@ exp_alta_dsc3<- DSC3[DSC3$`Expression (1=high)` < 1 , ]
 exp_baja_dsc3 <- DSC3[DSC3$`Expression (1=high)` > 0 , ]
 ```
 
-
 ```{r}
 
 datos_supervivencia_alta_dsc3 <- Surv(exp_alta_dsc3$`Time (months)`, exp_alta_dsc3$Event)
@@ -176,7 +176,7 @@ modelo_km_baja_dsc3 <- survfit(datos_supervivencia_baja_dsc3 ~ 1)
 
 ```
 
-### Análisis 
+### Análisis
 
 #### Gráficas de supervivencia de expresión alta y baja
 
@@ -190,7 +190,8 @@ coxph( Surv(DSC3$`Time (months)`, DSC3$Event) ~ DSC3$`Expression (1=high)`, data
 
 
 ```
-#### De acuerdo a la grafica de Kaplan-Meier del gen DSC3, se observa la probabilidad de supervivencia es menor  cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (<0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.43, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 43% mayor que cuando esta en el nivel alto.
+
+De acuerdo a la grafica de Kaplan-Meier del gen DSC3, se observa la probabilidad de supervivencia es menor cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (\<0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.43, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 43% mayor que cuando esta en el nivel alto.
 
 #### Histograma
 
@@ -233,7 +234,6 @@ exp_alta_gjb5 <- GJB5[GJB5$`Expression (1=high)` < 1 , ]
 exp_baja_gjb5 <- GJB5[GJB5$`Expression (1=high)` > 0 , ]
 ```
 
-
 ```{r}
 datos_supervivencia_alta_gjb5 <- Surv(exp_alta_gjb5$`Time (months)`, exp_alta_gjb5$Event)
 datos_supervivencia_baja_gjb5 <- Surv(exp_baja_gjb5$`Time (months)`, exp_baja_gjb5$Event)
@@ -243,6 +243,7 @@ modelo_km_baja_gjb5 <- survfit(datos_supervivencia_baja_gjb5 ~ 1)
 ```
 
 ### Análisis
+
 #### Graficas de supervivencia
 
 ```{r}
@@ -254,9 +255,8 @@ coxph( Surv(GJB5$`Time (months)`, GJB5$Event) ~ GJB5$`Expression (1=high)`, data
   tbl_regression(exp = TRUE) 
 
 ```
-De acuerdo a la grafica de Kaplan-Meier del gen GJB5, se observa la probabilidad de supervivencia es menor  cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (<0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.37, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 37% mayor que cuando esta en el nivel alto.
 
-
+De acuerdo a la grafica de Kaplan-Meier del gen GJB5, se observa la probabilidad de supervivencia es menor cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (\<0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.37, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 37% mayor que cuando esta en el nivel alto.
 
 #### Histograma
 
@@ -271,7 +271,6 @@ tiempo_gjb5  <- histograma_gjb5 $breaks[-1]
 frecuencia_gjb5  <- histograma_gjb5 $counts
 
 ```
-
 
 #### Gráfica de intervalos y frequencias
 
@@ -301,7 +300,6 @@ exp_baja_s1pr5  <- S1PR5[S1PR5$`Expression (1=high)` > 0 , ]
 
 ```
 
-
 ```{r}
 datos_supervivencia_alta_s1pr5 <- Surv(exp_alta_s1pr5$`Time (months)`, exp_alta_s1pr5$Event)
 datos_supervivencia_baja_s1pr5 <- Surv(exp_baja_s1pr5$`Time (months)`, exp_baja_s1pr5$Event)
@@ -324,7 +322,8 @@ coxph( Surv(S1PR5$`Time (months)`, S1PR5$Event) ~ S1PR5$`Expression (1=high)`, d
   tbl_regression(exp = TRUE)
 
 ```
-De acuerdo a la grafica de Kaplan-Meier del gen S1PR5, se observa la probabilidad de supervivencia es menor  cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.31, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 31% mayor que cuando esta en el nivel alto.
+
+De acuerdo a la grafica de Kaplan-Meier del gen S1PR5, se observa la probabilidad de supervivencia es menor cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.31, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 31% mayor que cuando esta en el nivel alto.
 
 #### Histograma
 
@@ -352,10 +351,9 @@ ggplot(tabla_frec_s1pr5, aes(x = tiempo_s1pr5, y = frecuencia_s1pr5)) +
 
 ```
 
-## Gen GPC1 
+## Gen GPC1
 
-Codifica para la glicoproteína de células germinales 1, que se ha asociado con la progresión del cáncer y la angiogénesis.
-#### Objetos de supervivencia con datos filtrados
+Codifica para la glicoproteína de células germinales 1, que se ha asociado con la progresión del cáncer y la angiogénesis. \#### Objetos de supervivencia con datos filtrados
 
 ```{r}
 #Filtro expresion alta
@@ -365,7 +363,6 @@ exp_alta_gpc1 <- GPC1[GPC1$`Expression (1=high)` < 1 , ]
 exp_baja_gpc1 <- GPC1[GPC1$`Expression (1=high)` > 0 , ]
 
 ```
-
 
 ```{r}
 datos_supervivencia_alta_gpc1 <- Surv(exp_alta_gpc1$`Time (months)`, exp_alta_gpc1$Event)
@@ -387,7 +384,8 @@ legend('bottomright',inset=0.05,c("Expresión Alta","Expresión Baja"),lty=1,col
 coxph( Surv(GPC1$`Time (months)`, GPC1$Event) ~ GPC1$`Expression (1=high)`, data = GPC1) %>% 
   tbl_regression(exp = TRUE)
 ```
-De acuerdo a la grafica de Kaplan-Meier del gen GPC1, se observa la probabilidad de supervivencia es menor  cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (<0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.46, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 46% mayor que cuando esta en el nivel alto.
+
+De acuerdo a la grafica de Kaplan-Meier del gen GPC1, se observa la probabilidad de supervivencia es menor cuando el gen se encuentra en un nivel bajo. Ademas, el P-value es menor al 0.05 (\<0.001) por lo que se rechaza la hipotesis nula y se confirma que hay una diferencia estadisticamente significativa entre los dos niveles de expresion del gen. Finalmente, el Hazard Ratio tiene un valor de 1.46, indicando que cuando el gen se encuentra expresado en el nivel bajo existe una probabilidad de muerte 46% mayor que cuando esta en el nivel alto.
 
 #### Histogramaa
 
