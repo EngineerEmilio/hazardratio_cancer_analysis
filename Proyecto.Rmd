@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introducción:
 
-De acuerdo con la Organización Mundial de la Salud, el cáncer es la segunda causa de muerte a nivel mundial. El cáncer de pulmón es el tipo de cáncer más común en hombres y mujeres. Clasificar muestras de pacientes con cáncer de pulmón utilizando datos de la expresión de los genes puede ayudar a mejorar el proceso de diagnóstico y tratamiento de esta enfermedad. Los 9 genes analizados en este estudio fueron seleccionados en un proyecto previo por su capacidad para diferenciar tipos de cáncer de pulmón en pacientes utilizado algoritmos de Machine Learning. El objetivo del presente estudio es determinar cuáles genes tienen mayor impacto en la mortalidad de los pacientes de este tipo de cáncer mediante un análisis de supervivencia utilizado el modelo estadístico de Kaplan-Meier.
+De acuerdo con la Organización Mundial de la Salud, el cáncer es la segunda causa de muerte a nivel mundial. El cáncer de pulmón es el tipo de cáncer más común en hombres y mujeres. Clasificar muestras de pacientes con cáncer de pulmón utilizando datos de la expresión de los genes puede ayudar a mejorar el proceso de diagnóstico y tratamiento de esta enfermedad. Los 5 genes analizados en este estudio (CDHR1, DSC3, GJB5, S1PR5 y GPC1) fueron seleccionados en un proyecto previo por su capacidad para diferenciar tipos de cáncer de pulmón en pacientes utilizado algoritmos de Machine Learning. El objetivo del presente estudio es determinar cuáles genes tienen mayor impacto en la mortalidad de los pacientes de este tipo de cáncer mediante un análisis de supervivencia utilizado el modelo estadístico de supervivencia de Cox y de Kaplan-Meier.
 
 #### Integrantes:
 
@@ -411,6 +411,9 @@ ggplot(tabla_frec_gpc1, aes(x = tiempo_gpc1, y = frecuencia_gpc1)) +
   labs(title = "Serie de Tiempo de Muertes", x = "Tiempo (meses)", y = "Número de muertes")
 ```
 
+# Conclusiones
+
+Los 5 genes analizados (CDHR1, DSC3, GJB5, S1PR5 y GPC1) codifican para proteínas involucradas en procesos como la adhesión, la comunicación y el crecimiento celular. Un nivel de expresión inadecuado de estos genes genera alteraciones en los procesos mencionados, lo cual contribuye para que se desarrolle el cáncer, caracterizado por una proliferación descontrolada de células. De acuerdo con el análisis estadístico y a las gráficas de Kaplan-Meier, los niveles de expresión alto de los 5 genes mencionados tienen una probabilidad de supervivencia estadísticamente menor que los niveles de expresión bajos. De acuerdo con los Hazard Ratio (HR) calculados, los pacientes con un nivel de expresión alto de dichos genes tienen una probabilidad de supervivencia de 31 a 47% menor en comparación con los pacientes que tienen un nivel bajo. Esto sugiere que se podría aumentar la supervivencia de los pacientes con cáncer de pulmón mediante el desarrollo de tratamientos enfocados en reducir los niveles de expresión de los 5 genes analizados. Por otro lado, todos los genes analizados mostraron histogramas y gráficas de líneas similares; donde destaca que el pico de mortalidad de la enfermedad se encuentra entre los meses 9 y 15. Por ello, deberá prestarse mayor apoyo a los pacientes en el periodo que comprende del 9 al 15 del desarrollo del cáncer de pulmón.
 ```{r}
 ```
 
